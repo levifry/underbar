@@ -17,6 +17,8 @@
 
   describe('Part II', function() {
 
+
+
     describe('contains', function() {
 
       it('should not mutate the input array', function() {
@@ -56,13 +58,11 @@
       });
 
       it('should return false given an array and a value not in that array', function() {
-        // Replace this line with an `expect` statement that tests
-        // the behavior described by the `it` string
         var array = [1, 2, 3];
         var value = 5;
         expect(_.contains(array, value)).to.be.false;
-
-        //throw new Error('This test is missing.');
+        // Replace this line with an `expect` statement that tests
+        // the behavior described by the `it` string
       });
 
       it('should return true given a object and a value from that object', function() {
@@ -95,7 +95,7 @@
       it('fails for a collection of all-falsy values', function() {
         // Replace this line with an `expect` statement that tests
         // the behavior described by the `it` string
-        expect(_.every([false, 0], _.identity)).to.be.false;
+        expect(_.every([false, '', 0], _.identity)).to.be.false;
       });
 
       it('fails for a collection containing mixed falsy and truthy values', function() {
@@ -153,7 +153,7 @@
       it('should fail for a set containing no matching values', function() {
         // Replace this line with an `expect` statement that tests
         // the behavior described by the `it` string
-        expect(_.some([null, 0, false], _.identity)).to.be.false;
+        expect(_.some([3, 7, 9], isEven)).to.be.false;
       });
 
       it('should pass for a collection containing one matching value', function() {
@@ -171,6 +171,7 @@
         expect(_.some([false, false, false])).to.be.false;
       });
     });
+
 
     describe('extend', function() {
 
@@ -191,13 +192,11 @@
       });
 
       it('should override properties found on the destination', function() {
-        // Replace this line with an `expect` statement that tests
-        // the behavior described by the `it` string
-        var destination = {a : 'c'};
-        var source = { a: 'b' };
+        var destination = { x: 'x' };
+        var source = { x: 'b' };
         var extended = _.extend(destination, source);
 
-        expect(extended.a).to.equal('b');
+        expect(extended.x).to.equal('b');
       });
 
       it('should not override properties not found in the source', function() {
@@ -273,14 +272,14 @@
       });
 
       it('should copy any property whose key is not already set on the target', function() {
-        // Replace this line with an `expect` statement that tests
-        // the behavior described by the `it` string
-        var destination = {a : 1};
-        var source = {b : 1, c : 2};
+        var destination = {b: 2};
+        var source = { a: 1, c: 3};
 
         _.defaults(destination, source);
-        expect(destination.b).to.equal(1);
-        expect(destination.c).to.equal(2);
+
+        expect(destination.a).to.equal(1);
+        expect(destination.c).to.equal(3);
+
       });
 
       it('should not copy a property if that key is already set on the target', function() {
@@ -391,6 +390,8 @@
       });
     });
 
+    /* -------------------------  CURRENT FUNCTION  --------------------------------- */
+
     describe('memoize', function() {
       var add, memoAdd;
 
@@ -402,14 +403,13 @@
         memoAdd = _.memoize(add);
       });
 
-      it('should produce the same result as the non-memoized version', function() {
 
+      it('should produce the same result as the non-memoized version', function() {
         expect(add(1, 2)).to.equal(3);
         expect(memoAdd(1, 2)).to.equal(3);
       });
 
       it('should give different results for different arguments', function() {
-
         expect(memoAdd(1, 2)).to.equal(3);
         expect(memoAdd(3, 4)).to.equal(7);
         expect(memoAdd(1, 3)).to.equal(4);
@@ -451,6 +451,8 @@
       });
     });
 
+/* -------------------------  CURRENT FUNCTION  --------------------------------- */
+
     describe('delay', function() {
       var callback;
 
@@ -458,8 +460,10 @@
         callback = sinon.spy();
       });
 
+
       it('should only execute the function after the specified wait time', function() {
         _.delay(callback, 100);
+        console.log('%c ------- _.delay test1: -------', 'font-size: 11px; color: yellow;font-weight: unset');
         clock.tick(99);
 
         expect(callback).to.have.not.been.called;
@@ -514,5 +518,3 @@
   });
 
 }());
-
-console.log('%c ------- part 2: passed -------', 'font-size: 11px; color: lime;font-weight: unset');

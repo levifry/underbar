@@ -73,7 +73,7 @@
       }
     });
 
-    return parseInt(result); // QUESTION???
+    return result;
   };
 
   // Return all elements of an array that pass a truth test.
@@ -148,18 +148,46 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = (collection, iterator, accumulator) => {
+      let iterableArray = [];
+      if(!Array.isArray(collection)){
+          iterableArray = Object.values(collection);
+      }
+      else{
+        iterableArray = [...collection];
+      }
+
     if (accumulator === undefined) {
-      accumulator = collection[0];
-      for (let i = 1; i < collection.length; i++) {
-        accumulator = iterator(accumulator, collection[i]);
+      accumulator = iterableArray[0];
+      for (let i = 1; i < iterableArray.length; i++) {
+        accumulator = iterator(accumulator, iterableArray[i]);
       }
     } else {
-      for (let i = 0; i < collection.length; i++) {
-        accumulator = iterator(accumulator, collection[i]);
+      for (let i = 0; i < iterableArray.length; i++) {
+        accumulator = iterator(accumulator, iterableArray[i]);
      }
+    }
+
+    return accumulator;
+  };
+
+/*
+
+  _.reduce = (collection, iterator, accumulator) => {
+
+    if (accumulator === undefined) {
+      accumulator = collection[0];
+      var i = 1;
+    } else {
+      var i = 0;
+    }
+    while (i < collection.length) {
+      accumulator = iterator(accumulator, collection[i]);
+      i++
     }
     return accumulator;
   };
+
+*/
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
@@ -169,6 +197,8 @@
       if (wasFound) {
         return true;
       }
+      //console.log(`Item: ${item}`);
+      //console.log(`Target: ${target}`);
       return item === target;
     }, false);
   };
@@ -177,12 +207,42 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    return _.reduce(collection, function(wasFound, item) {
+      if(!wasFound){
+        return false;
+      }
+
+      if(iterator === undefined){
+        return item;
+      }
+      //return iterator(item)
+      if (iterator(item))
+        return true;
+      else{
+        return false;
+      }
+    }, true);
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    return  _.reduce(collection, function(wasFound, item) {
+      if(wasFound){
+        return true;
+      }
+
+      if(iterator === undefined){
+        return item;
+      }
+      //return iterator(item)
+      if (iterator(item))
+        return true;
+      else{
+        return false;
+      }
+    }, false);
   };
 
 
@@ -204,12 +264,30 @@
   //   }, {
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
-  _.extend = function(obj) {
-  };
+  _.extend = _.extend = (obj, ...vars) => Object.assign(obj, ...vars);
+
+  // function(obj, ...moreObjs) {
+  //     for (let item of moreObjs){
+  //       for (let key in item){
+  //         obj[key] = item[key];
+  //       }
+  //     }
+  //     return obj;
+  // };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
-  _.defaults = function(obj) {
+  _.defaults = function(obj, ...moreObjs) {
+
+    for (let item of moreObjs){
+      for (let key in item){
+        if(!Object.keys(obj).includes(key)){
+          obj[key] = item[key];
+        }
+      }
+    }
+    return obj;
+
   };
 
 
@@ -252,7 +330,55 @@
   // _.memoize should return a function that, when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
+
+  function areEqual(a, b) {
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length !== b.length) return false;
+
+    // If you don't care about the order of the elements inside
+    // the array, you should sort both arrays here.
+    // Please note that calling sort on an array will modify that array.
+    // you might want to clone your array first.
+
+    for (var i = 0; i < a.length; ++i) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+  }
+
   _.memoize = function(func) {
+
+    var memoryArray = [];
+
+    return function() {
+
+      var result;
+
+        //loop and see if the new parameters have been memorized already
+        for (let item of memoryArray) {
+          // console.log(`loop running`);
+          let val = item.slice(-1)[0];
+          let parameters = item.slice(0, item.length-1);
+          if (areEqual(arguments, parameters)){
+            // console.log('match found, returning a value')
+            return val;
+          } else if (Array.isArray(arguments[0])) {
+            // console.log('array found, ending function execution');
+            return;
+          }
+        }
+        result = func.apply(this, arguments);
+        var inputResult = [];
+        inputResult = Array.from(arguments);
+        inputResult.push(result);
+        memoryArray.push(inputResult);
+
+        // console.log('no match found, pushing to memory array')
+        return result;
+
+    };
+
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -261,7 +387,8 @@
   // The arguments for the original function are passed after the wait
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
-  _.delay = function(func, wait) {
+  _.delay = function(func, wait, ...args) {
+    setTimeout(func, wait, ...args);
   };
 
 
@@ -276,6 +403,9 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var clonedArray = structuredClone(array);
+    clonedArray.sort(() => Math.random() - 0.5)
+    return clonedArray;
   };
 
 
@@ -290,6 +420,7 @@
   // Calls the method named by functionOrKey on each value in the list.
   // Note: You will need to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
+    console.log('%c _.invoked running ', 'color: green;font-weight: unset');
   };
 
   // Sort the object's values by a criterion produced by an iterator.

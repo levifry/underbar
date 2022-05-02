@@ -30,6 +30,7 @@
       });
     });
 
+
     describe('first', function() {
 
       it('should be able to pull out the first element of an array', function() {
@@ -51,6 +52,8 @@
       });
     });
 
+
+
     describe('last', function() {
 
       it('should pull the last element from an array', function() {
@@ -66,9 +69,10 @@
       });
 
       it('should return all the array\'s elements if the index argument is larger than the length of the array', function() {
-        expect(_.last([1, 2, 3], 5)).to.eql([ 1, 2, 3 ]);
+        expect(_.last([1, 2, 3], 5)).to.eql([1, 2, 3]);
       });
     });
+
 
     describe('each', function() {
 
@@ -126,7 +130,7 @@
           iterations.push([letter, index]);
         });
 
-        expect(iterations).to.eql([['a',0,],['b',1],['c',2]]);
+        expect(iterations).to.eql([['a', 0],['b', 1], ['c', 2]]);
       });
 
       it('should iterate over arrays and provide access to the original collection', function() {
@@ -214,12 +218,19 @@
 
     });
 
+
+
+
+
+
+
+
     describe('indexOf', function() {
 
       it('should find 40 in the list', function() {
         var numbers = [10, 20, 30, 40, 50];
 
-        expect(_.indexOf(numbers, 40)).to.equal(3);
+        expect(_.indexOf([10, 20, 30, 40, 50], 40)).to.equal(3);
       });
 
       it('should be able to compute indexOf even when the native function is undefined', function() {
@@ -229,16 +240,21 @@
       });
 
       it('returns -1 when the target cannot be found not in the list', function() {
-        var numbers = [];
+        var numbers = [10, 20, 30, 40, 50];
 
         expect(_.indexOf(numbers, 35)).to.equal(-1);
       });
 
       it('returns the first index that the target can be found at when there are multiple matches', function() {
-        var numbers = [4,2,2,3,4];
-        expect(_.indexOf(numbers, 2)).to.equal(1);
+        var numbers = [10, 20, 30, 40, 50, 20];
+        expect(_.indexOf(numbers, 20)).to.equal(1);
       });
     });
+
+
+
+
+
 
     describe('filter', function() {
 
@@ -265,6 +281,8 @@
       });
     });
 
+
+
     describe('reject', function() {
 
       it('should reject all even numbers', function() {
@@ -289,6 +307,8 @@
         expect(evens).to.not.equal(numbers);
       });
     });
+
+
 
     describe('uniq', function() {
 
@@ -336,6 +356,8 @@
       });
     });
 
+
+
     describe('map', function() {
 
       it('should not mutate the input array', function() {
@@ -379,10 +401,11 @@
         var mappedNumbers = _.map(numbers, function(num) {
           return num;
         });
-
         expect(mappedNumbers).to.not.equal(numbers);
       });
     });
+
+
 
     describe('pluck', function() {
 
@@ -392,7 +415,7 @@
           { name: 'curly', age: 50 }
         ];
 
-        expect(_.pluck(people, 'name')).to.eql(['moe', 'curly']);
+        expect(_.pluck(people, 'name')).to.eql['moe', 'curly'];
       });
 
       it('should not modify the original array', function() {
@@ -407,6 +430,7 @@
       });
     });
 
+/* -------------------------  CURRENT FUNCTION  --------------------------------- */
     describe('reduce', function() {
 
       it('should return a value', function() {
@@ -460,7 +484,7 @@
         var orderTraversed = [];
 
         _.reduce([1, 2, 3, 4], function(memo, item) {
-          orderTraversed.push(item);
+          orderTraversed.push(item)
           return memo;
         }, 10);
 
@@ -490,7 +514,7 @@
         expect(result).to.equal(4);
       });
 
-      it('should check to see if the reduce function accepts a value for the accumulator', function() {
+      it('Fill me in with a description of the behavior this test is checking for', function() {
         var result = _.reduce([1, 2, 3], function(memo, item) {
           return memo * item;
         }, 0);
@@ -520,4 +544,4 @@
 
 }());
 
-console.log('%c ------- part 1: passed -------', 'font-size: 11px; color: lime;font-weight: unset');
+/* -------------------------  CURRENT FUNCTION  --------------------------------- */
